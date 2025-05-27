@@ -1,25 +1,26 @@
-/ {
 \#include \<behaviors.dtsi>
 \#include \<dt-bindings/zmk/keys.h>
 \#include \<dt-bindings/zmk/bt.h>
 \#include \<dt-bindings/zmk/outputs.h>
 
-```
 // Layer-Definitionen
-#define DEF 0   // Default Layer
-#define SYM 1   // Symbol Layer
-#define NAV 2   // Navigation Layer
-#define SYS 3   // System Layer
+\#define DEF 0   // Default Layer
+\#define SYM 1   // Symbol Layer
+\#define NAV 2   // Navigation Layer
+\#define SYS 3   // System Layer
 
+/ {
 behaviors {
-    td_bspc: tap_dance_backspace {
-        compatible = "zmk,behavior-tap-dance";
-        #binding-cells = <0>;
-        tapping-term-ms = <200>;
-        bindings = <&kp BSPC>, <&kp LC(BSPC)>;
-    };
+// Tap-Dance Backspace
+td\_bspc: tap\_dance\_backspace {
+compatible = "zmk,behavior-tap-dance";
+\#binding-cells = <0>;
+tapping-term-ms = <200>;
+bindings = <\&kp BSPC>, <\&kp LC(BSPC)>;
+};
 
-    // Home-Row Mods für jede Taste
+```
+    // Home-Row Hold-Taps
     hm_a: homerow_mods_a {
         compatible = "zmk,behavior-hold-tap";
         #binding-cells = <0>;
@@ -85,7 +86,7 @@ behaviors {
         bindings = <&kp RGUI>, <&kp O>;
     };
 
-    // Daumen Layer-Taps
+    // Thumb Layer-Taps
     lt_sym: layer_tap_symbol {
         compatible = "zmk,behavior-hold-tap";
         #binding-cells = <0>;
@@ -195,5 +196,30 @@ keymap {
     symbol_layer {
         bindings = <
             &kp ESC &kp N1 &kp N2 &kp N3 &kp N4 &kp N5   &kp N6 &kp N7 &kp N8 &kp N9 &kp N0 &kp PLUS
-            &trans &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT &kp CARET &kp AMPS &kp )
+            &trans &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT &kp CARET &kp AMPS &kp ASTRK &kp LPAR &kp RPAR &kp BSLH
+            &trans &kp TILDE &kp GRAVE &kp LC(Z) &kp LC(X) &kp LC(C) &kp LBRC &kp RBRC &kp LBKT &kp RBKT &kp PIPE &kp LC(V)
+            &trans &trans &trans &trans &trans &trans
+        >;
+    };
+
+    navigation_layer {
+        bindings = <
+            &kp F1 &kp F2 &kp F3 &kp F4 &kp F5 &kp F6  &kp F7 &kp F8 &kp F9 &kp F10 &kp F11 &kp F12
+            &trans &m_sudo &m_cd &m_git &m_ls &m_pipe &m_and &kp LEFT &kp DOWN &kp UP &kp RIGHT &kp DEL
+            &trans &m_squote &m_dquote &m_arrow &trans &trans &m_arrow &kp HOME &kp PG_DN &kp PG_UP &kp END &trans
+            &trans &trans &trans &trans &trans &trans
+        >;
+    };
+
+    system_layer {
+        bindings = <
+            &out OUT_USB &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &trans &trans &trans &trans &trans &trans
+            &trans &trans &trans &trans &trans &trans &trans &trans &trans &trans &trans &trans
+            &trans &trans &trans &trans &trans &bt BT_CLR_ALL &trans &trans &sys_reset &bootloader &trans &trans
+            &trans &trans &trans &trans &trans &trans
+        >;
+    };
+};
 ```
+
+};
