@@ -20,29 +20,30 @@
 
 / {
     behaviors {
-        // Double-tap Backspace für Wort löschen
-        td_bspc: tap_dance_backspace {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            tapping-term-ms = <200>;
-            bindings = <&kp BSPC>, <&kp LC(BSPC)>;
-        };
-        
-        // Home Row Mods - Halte-Funktionen
-        hm_a: homerow_mod_a { compatible = "zmk,behavior-hold-tap"; #binding-cells = <2>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp LGUI>, <&kp A>; };
-        hm_s: homerow_mod_s { compatible = "zmk,behavior-hold-tap"; #binding-cells = <2>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp LALT>, <&kp S>; };
-        hm_d: homerow_mod_d { compatible = "zmk,behavior-hold-tap"; #binding-cells = <2>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp LCTRL>, <&kp D>; };
-        hm_f: homerow_mod_f { compatible = "zmk,behavior-hold-tap"; #binding-cells = <2>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp LSHFT>, <&kp F>; };
-
-        hm_j: homerow_mod_j { compatible = "zmk,behavior-hold-tap"; #binding-cells = <2>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp RSHFT>, <&kp J>; };
-        hm_k: homerow_mod_k { compatible = "zmk,behavior-hold-tap"; #binding-cells = <2>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp RCTRL>, <&kp K>; };
-        hm_l: homerow_mod_l { compatible = "zmk,behavior-hold-tap"; #binding-cells = <2>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp RALT>, <&kp L>; };
-        hm_ouml: homerow_mod_ouml { compatible = "zmk,behavior-hold-tap"; #binding-cells = <2>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp RGUI>, <&kp O>; }; // Ö als Beispiel, da SEMI in Glove80 RGUI war
-
-        // Layer-Tap für Daumen
-        lt_sym: layer_tap_symbol { compatible = "zmk,behavior-hold-tap"; #binding-cells = <2>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&mo SYM>, <&kp SPACE>;}; // Halten für SYM Layer, Tippen für SPACE
-        lt_nav: layer_tap_nav { compatible = "zmk,behavior-hold-tap"; #binding-cells = <2>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&mo NAV>, <&kp RET>;};   // Halten für NAV Layer, Tippen für ENTER
+    // Double-tap Backspace für Wort löschen
+    td_bspc: tap_dance_backspace {
+        compatible = "zmk,behavior-tap-dance";
+        label = "TAP_DANCE_BACKSPACE";
+        #binding-cells = <0>;
+        tapping-term-ms = <200>;
+        bindings = <&kp BSPC>, <&kp LC(BSPC)>;
     };
+    
+    // Home Row Mods - Korrigiert
+    hm_a: homerow_mod_a { compatible = "zmk,behavior-hold-tap"; label = "HM_A_LGUI";  #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp LGUI>, <&kp A>; };
+    hm_s: homerow_mod_s { compatible = "zmk,behavior-hold-tap"; label = "HM_S_LALT";  #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp LALT>, <&kp S>; };
+    hm_d: homerow_mod_d { compatible = "zmk,behavior-hold-tap"; label = "HM_D_LCTRL"; #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp LCTRL>, <&kp D>; };
+    hm_f: homerow_mod_f { compatible = "zmk,behavior-hold-tap"; label = "HM_F_LSHFT"; #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp LSHFT>, <&kp F>; };
+
+    hm_j: homerow_mod_j { compatible = "zmk,behavior-hold-tap"; label = "HM_J_RSHFT"; #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp RSHFT>, <&kp J>; };
+    hm_k: homerow_mod_k { compatible = "zmk,behavior-hold-tap"; label = "HM_K_RCTRL"; #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp RCTRL>, <&kp K>; };
+    hm_l: homerow_mod_l { compatible = "zmk,behavior-hold-tap"; label = "HM_L_RALT";  #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp RALT>, <&kp L>; };
+    hm_ouml: homerow_mod_ouml { compatible = "zmk,behavior-hold-tap"; label = "HM_O_RGUI"; #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp RGUI>, <&kp O>; };
+
+    // Layer-Tap für Daumen (diese waren schon korrekt mit #binding-cells = <0>)
+    lt_sym: layer_tap_symbol { compatible = "zmk,behavior-hold-tap"; label = "LT_SYM_SPACE"; #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&mo SYM>, <&kp SPACE>;};
+    lt_nav: layer_tap_nav { compatible = "zmk,behavior-hold-tap"; label = "LT_NAV_ENTER"; #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&mo NAV>, <&kp RET>;};
+};
 
     macros {
         m_sudo: macro_sudo { compatible = "zmk,behavior-macro"; #binding-cells = <0>; bindings = <&kp S &kp U &kp D &kp O &kp SPACE>; };
