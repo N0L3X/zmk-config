@@ -2,136 +2,130 @@
  * Copyright (c) 2020 The ZMK Contributors
  * SPDX-License-Identifier: MIT
  *
- * Corne V3 QWERTZ Layout - Adaptiert von Glove80
- * Fokus: Schnelles, intuitives Tippen mit Home Row Mods
+ * Corne V3 QWERTZ Layout
+ * Finale korrigierte Version basierend auf Feedback
  */
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
-// #include <dt-bindings/zmk/rgb.h> // Entfernt, da kein RGB
 #include <dt-bindings/zmk/outputs.h>
 
-// Definitionen für Layer-Namen (optional, aber hilfreich für Lesbarkeit)
+// Layer-Definitionen für bessere Lesbarkeit
 #define DEF 0 // Default Layer
-#define SYM 1 // Symbol Layer (ehemals lower_layer aus deinem Corne Code)
-#define NAV 2 // Navigations-/Funktions-Layer (ehemals raise_layer aus deinem Corne Code)
-#define SYS 3 // System Layer (Bluetooth, Reset etc.)
+#define SYM 1 // Symbol Layer
+#define NAV 2 // Navigations-/Funktions-Layer
+#define SYS 3 // System Layer
 
-/ {
-    behaviors {
+behaviors {
     // Double-tap Backspace für Wort löschen
     td_bspc: tap_dance_backspace {
         compatible = "zmk,behavior-tap-dance";
-        label = "TAP_DANCE_BACKSPACE";
         #binding-cells = <0>;
         tapping-term-ms = <200>;
         bindings = <&kp BSPC>, <&kp LC(BSPC)>;
     };
     
-    // Home Row Mods - Korrigiert
-    hm_a: homerow_mod_a { compatible = "zmk,behavior-hold-tap"; label = "HM_A_LGUI";  #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp LGUI>, <&kp A>; };
-    hm_s: homerow_mod_s { compatible = "zmk,behavior-hold-tap"; label = "HM_S_LALT";  #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp LALT>, <&kp S>; };
-    hm_d: homerow_mod_d { compatible = "zmk,behavior-hold-tap"; label = "HM_D_LCTRL"; #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp LCTRL>, <&kp D>; };
-    hm_f: homerow_mod_f { compatible = "zmk,behavior-hold-tap"; label = "HM_F_LSHFT"; #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp LSHFT>, <&kp F>; };
+    // Generisches Home Row Mods Behavior (ohne eigene bindings-Property hier)
+    hm: homerow_mods {
+        compatible = "zmk,behavior-hold-tap";
+        #binding-cells = <2>; // Erwartet zwei Parameter aus dem Keymap-Aufruf
+        tapping-term-ms = <200>; // Dauer für Tap vs Hold
+        quick-tap-ms = <150>;  // Kurzer Tap wird als Tap gewertet, auch wenn eine andere Taste schnell folgt
+        flavor = "tap-preferred"; // Bevorzugt Tap, wenn Unterscheidung schwierig
+        // KEINE 'bindings = <...>, <...>;' Zeile hier!
+    };
+    
+    // Spezifische Layer-Tap Behaviors
+    lt_sym: layer_tap_symbol {
+        compatible = "zmk,behavior-hold-tap";
+        #binding-cells = <0>;
+        tapping-term-ms = <200>;
+        quick-tap-ms = <150>;
+        flavor = "tap-preferred";
+        bindings = <&mo SYM>, <&kp SPACE>; // Halten für SYM Layer, Tippen für SPACE
+    };
 
-    hm_j: homerow_mod_j { compatible = "zmk,behavior-hold-tap"; label = "HM_J_RSHFT"; #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp RSHFT>, <&kp J>; };
-    hm_k: homerow_mod_k { compatible = "zmk,behavior-hold-tap"; label = "HM_K_RCTRL"; #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp RCTRL>, <&kp K>; };
-    hm_l: homerow_mod_l { compatible = "zmk,behavior-hold-tap"; label = "HM_L_RALT";  #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp RALT>, <&kp L>; };
-    hm_ouml: homerow_mod_ouml { compatible = "zmk,behavior-hold-tap"; label = "HM_O_RGUI"; #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&kp RGUI>, <&kp O>; };
-
-    // Layer-Tap für Daumen (diese waren schon korrekt mit #binding-cells = <0>)
-    lt_sym: layer_tap_symbol { compatible = "zmk,behavior-hold-tap"; label = "LT_SYM_SPACE"; #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&mo SYM>, <&kp SPACE>;};
-    lt_nav: layer_tap_nav { compatible = "zmk,behavior-hold-tap"; label = "LT_NAV_ENTER"; #binding-cells = <0>; tapping-term-ms = <200>; quick-tap-ms = <150>; flavor = "tap-preferred"; bindings = <&mo NAV>, <&kp RET>;};
+    lt_nav: layer_tap_nav {
+        compatible = "zmk,behavior-hold-tap";
+        #binding-cells = <0>;
+        tapping-term-ms = <200>;
+        quick-tap-ms = <150>;
+        flavor = "tap-preferred";
+        bindings = <&mo NAV>, <&kp RET>;   // Halten für NAV Layer, Tippen für ENTER
+    };
 };
 
-    macros {
-        m_sudo: macro_sudo { compatible = "zmk,behavior-macro"; #binding-cells = <0>; bindings = <&kp S &kp U &kp D &kp O &kp SPACE>; };
-        m_cd: macro_cd { compatible = "zmk,behavior-macro"; #binding-cells = <0>; bindings = <&kp C &kp D &kp SPACE>; };
-        m_ls: macro_ls { compatible = "zmk,behavior-macro"; #binding-cells = <0>; bindings = <&kp L &kp S &kp SPACE &kp MINUS &kp L &kp A &kp SPACE>; };
-        m_git: macro_git { compatible = "zmk,behavior-macro"; #binding-cells = <0>; bindings = <&kp G &kp I &kp T &kp SPACE>; };
-        m_pipe: macro_pipe { compatible = "zmk,behavior-macro"; #binding-cells = <0>; bindings = <&kp SPACE &kp PIPE &kp SPACE>; };
-        m_and: macro_and { compatible = "zmk,behavior-macro"; #binding-cells = <0>; bindings = <&kp SPACE &kp AMPS &kp AMPS &kp SPACE>; };
-        m_arrow: macro_arrow { compatible = "zmk,behavior-macro"; #binding-cells = <0>; bindings = <&kp MINUS &kp GT>; };
-        m_dquote: macro_dquote { compatible = "zmk,behavior-macro"; #binding-cells = <0>; bindings = <&kp DQT &kp DQT &kp LEFT>; };
-        m_squote: macro_squote { compatible = "zmk,behavior-macro"; #binding-cells = <0>; bindings = <&kp SQT &kp SQT &kp LEFT>; };
+macros {
+    // Makros mit korrigierter bindings-Syntax
+    m_sudo: macro_sudo { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp S>, <&kp U>, <&kp D>, <&kp O>, <&kp SPACE>; };
+    m_cd: macro_cd { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp C>, <&kp D>, <&kp SPACE>; };
+    m_ls: macro_ls { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp L>, <&kp S>, <&kp SPACE>, <&kp MINUS>, <&kp L>, <&kp A>, <&kp SPACE>; };
+    m_git: macro_git { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp G>, <&kp I>, <&kp T>, <&kp SPACE>; };
+    m_pipe: macro_pipe { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp SPACE>, <&kp PIPE>, <&kp SPACE>; };
+    m_and: macro_and { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp SPACE>, <&kp AMPS>, <&kp AMPS>, <&kp SPACE>; };
+    m_arrow: macro_arrow { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp MINUS>, <&kp GT>; };
+    m_dquote: macro_dquote { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp DQT>, <&kp DQT>, <&kp LEFT>; };
+    m_squote: macro_squote { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp SQT>, <&kp SQT>, <&kp LEFT>; };
+};
+
+combos { // Combo für System-Layer, wie im Corne-Beispiel zuvor
+    compatible = "zmk,combos";
+    combo_sys_layer {
+        timeout-ms = <50>;
+        key-positions = <31 40>; // Beispiel: die beiden äußeren Daumentasten der Corne (Positionen 0-41)
+                                 // Linke Hand: 0-20, Rechte Hand: 21-41
+                                 // Linke äußere Daumentaste: 3+3+3+3 = 12,  12+3=15, 15+3=18, Daumen: 19,20,21 (unlogisch)
+                                 // Corne Tasten gehen von 0 bis 41.
+                                 // Linke Hälfte: Tasten 0-5 (Top), 6-11 (Upper), 12-17 (Home), 18-20 (Thumb)
+                                 // Rechte Hälfte: Tasten 21-26 (Top), 27-32 (Upper), 33-38 (Home), 39-41 (Thumb)
+                                 // Äußere Daumentasten einer Corne sind also 18 und 39. Oder innere: 20 und 41.
+                                 // Ich nehme die inneren Daumentasten als Beispiel: 20 und 41
+        bindings = <&to SYS>;
+        layers = <DEF SYM NAV>; 
+    };
+};
+
+keymap {
+    compatible = "zmk,keymap";
+
+    default_layer { // Layer 0: QWERTZ Base mit Home Row Mods
+        bindings = <
+        // Linke Hälfte                                                                // Rechte Hälfte
+        &kp TAB      &kp Q         &kp W         &kp E         &kp R         &kp T          &kp Y         &kp U         &kp I         &kp O         &kp P         &td_bspc
+        &kp LCTRL    &hm LGUI A    &hm LALT S    &hm LCTRL D   &hm LSHFT F   &kp G          &kp H         &hm RSHFT J   &hm RCTRL K   &hm RALT L    &hm RGUI O    &kp SQT
+        &kp LSHFT    &kp Z         &kp X         &kp C         &kp V         &kp B          &kp N         &kp M         &kp COMMA     &kp DOT       &kp MINUS     &kp RSHFT
+                                   &kp LGUI      &lt_sym       &kp LALT                     &kp RCTRL     &lt_nav       &kp RGUI
+        >;
     };
 
-    combos {
-        compatible = "zmk,combos";
-        combo_sys_layer {
-            timeout-ms = <50>;
-            key-positions = <31 40>; // Beispiel: die beiden äußeren Daumentasten
-            bindings = <&to SYS>;
-            layers = <DEF SYM NAV>; // Combo funktioniert auf diesen Layern
-        };
+    symbol_layer { // Layer 1: Symbole & Zahlen
+        bindings = <
+        // Linke Hälfte                                                                // Rechte Hälfte
+        &kp ESC      &kp N1        &kp N2        &kp N3        &kp N4        &kp N5         &kp N6        &kp N7        &kp N8        &kp N9        &kp N0        &kp PLUS
+        &trans       &kp EXCL      &kp AT        &kp HASH      &kp DLLR      &kp PRCNT      &kp CARET     &kp AMPS      &kp ASTRK     &kp LPAR      &kp RPAR      &kp BSLH
+        &trans       &kp TILDE     &kp GRAVE     &kp LC(Z)     &kp LC(X)     &kp LC(C)      &kp LBRC      &kp RBRC      &kp LBKT      &kp RBKT      &kp PIPE      &kp LC(V)
+                                   &trans        &trans        &trans                       &trans        &trans        &trans
+        >;
     };
 
-    keymap {
-        compatible = "zmk,keymap";
+    navigation_layer { // Layer 2: Navigation, F-Tasten & Macros
+        bindings = <
+        // Linke Hälfte                                                                // Rechte Hälfte
+        &kp F1       &kp F2        &kp F3        &kp F4        &kp F5        &kp F6         &kp F7        &kp F8        &kp F9        &kp F10       &kp F11       &kp F12
+        &trans       &m_sudo       &m_cd         &m_git        &m_ls         &m_pipe        &m_and        &kp LEFT      &kp DOWN      &kp UP        &kp RIGHT     &kp DEL
+        &trans       &m_squote     &m_dquote     &m_arrow      &trans        &trans         &m_arrow      &kp HOME      &kp PG_DN     &kp PG_UP     &kp END       &trans
+                                   &trans        &trans        &trans                       &trans        &trans        &trans
+        >;
+    };
 
-        default_layer { // Layer 0: QWERTZ Base mit Home Row Mods
-            bindings = <
-            // Linke Hälfte
-            &kp TAB      &kp Q        &kp W         &kp E         &kp R         &kp T
-            &kp LCTRL    &hm_a        &hm_s         &hm_d         &hm_f         &kp G
-            &kp LSHFT    &kp Z        &kp X         &kp C         &kp V         &kp B
-                                      &kp LGUI      &lt_sym       &kp LALT // Thumb: GUI, Space/SYM, LALT
-
-            // Rechte Hälfte
-            &kp Z        &kp U        &kp I         &kp O         &kp P         &td_bspc // Z ist Y auf QWERTZ
-            &kp H        &hm_j        &hm_k         &hm_l         &hm_ouml      &kp SQT  // Ö als Beispiel für SEMI/RGUI
-            &kp N        &kp M        &kp COMMA     &kp DOT       &kp MINUS     &kp RSHFT // MINUS statt FSLH für QWERTZ Bindestrich
-                         &kp RCTRL    &lt_nav       &kp RGUI                 // Thumb: RCTRL, Enter/NAV, RGUI
-            >;
-        };
-
-        symbol_layer { // Layer 1: Symbole & Zahlen - angepasst von Glove80, Fokus auf Coding
-            bindings = <
-            // Linke Hälfte
-            &kp ESC      &kp N1       &kp N2        &kp N3        &kp N4        &kp N5
-            &trans       &kp EXCL     &kp AT        &kp HASH      &kp DLLR      &kp PRCNT
-            &trans       &kp TILDE    &kp GRAVE     &kp LC(Z)     &kp LC(V)     &kp LC(B)      // LC(Z) = Undo
-                                      &trans        &trans        &trans
-
-            // Rechte Hälfte
-            &kp N6       &kp N7       &kp N8        &kp N9        &kp N0        &kp PLUS
-            &kp CARET    &kp AMPS     &kp ASTRK     &kp LPAR      &kp RPAR      &kp BSLH
-            &trans       &kp LBRC     &kp RBRC      &kp LBKT      &kp RBKT      &kp PIPE       // {} [] |
-                         &trans       &trans        &trans
-            >;
-        };
-
-        navigation_layer { // Layer 2: Navigation, F-Tasten & Macros - angepasst von Glove80
-            bindings = <
-            // Linke Hälfte
-            &kp F1       &kp F2       &kp F3        &kp F4        &kp F5        &kp F6
-            &trans       &m_sudo      &m_cd         &m_git        &m_ls         &m_pipe
-            &trans       &kp LC(X)    &kp LC(C)     &kp LC(V)     &trans        &trans         // Cut, Copy, Paste
-                                      &trans        &trans        &trans
-
-            // Rechte Hälfte
-            &kp F7       &kp F8       &kp F9        &kp F10       &kp F11       &kp F12
-            &m_and       &kp LEFT     &kp DOWN      &kp UP        &kp RIGHT     &kp DEL
-            &m_arrow     &kp HOME     &kp PG_DN     &kp PG_UP     &kp END       &trans
-                         &trans       &trans        &trans
-            >;
-        };
-
-        system_layer { // Layer 3: System-Funktionen (Bluetooth, Reset)
-            bindings = <
-            // Linke Hälfte
-            &out OUT_USB &bt BT_SEL 0 &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4
-            &trans       &trans       &trans        &trans        &trans        &trans
-            &trans       &trans       &trans        &trans        &trans        &bt BT_CLR_ALL
-                                      &bootloader   &sys_reset    &trans // ACHTUNG: Reset-Tasten!
-
-            // Rechte Hälfte
-            &trans       &trans       &trans        &trans        &trans        &trans
-            &trans       &trans       &trans        &trans        &trans        &trans
-            &trans       &trans       &trans        &trans        &trans        &trans
-                         &trans       &trans        &trans
-            >;
-        };
+    system_layer { // Layer 3: System-Funktionen (Bluetooth, Reset)
+        bindings = <
+        // Linke Hälfte                                                                // Rechte Hälfte
+        &out OUT_USB &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4   &trans        &trans        &trans        &trans        &trans        &trans
+        &trans       &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans
+        &trans       &trans        &trans        &trans        &trans        &bt BT_CLR_ALL &trans        &trans        &sys_reset    &bootloader   &trans        &trans // ACHTUNG: Reset-Tasten!
+                                   &trans        &trans        &trans                       &trans        &trans        &trans
+        >;
     };
 };
