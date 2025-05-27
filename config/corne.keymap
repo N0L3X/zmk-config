@@ -1,6 +1,9 @@
 /*
- * Copyright (c) 2024 Your Name
+ * Copyright (c) 2020 The ZMK Contributors
  * SPDX-License-Identifier: MIT
+ *
+ * Corne V3 QWERTZ Layout
+ * Finale, strukturell korrigierte Overlay-Version
  */
 
 #include <behaviors.dtsi>
@@ -8,228 +11,122 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/outputs.h>
 
-// Layer-Definitionen
-#define DEF 0    // Default Layer
-#define SYM 1    // Symbol Layer
-#define NAV 2    // Navigation Layer
-#define SYS 3    // System Layer
+// Layer-Definitionen für bessere Lesbarkeit
+#define DEF 0 // Default Layer
+#define SYM 1 // Symbol Layer
+#define NAV 2 // Navigations-/Funktions-Layer
+#define SYS 3 // System Layer
 
-/ {
+/ { // Start des Root-Node Overlays
+
     behaviors {
         // Double-tap Backspace für Wort löschen
         td_bspc: tap_dance_backspace {
             compatible = "zmk,behavior-tap-dance";
-            #binding-cells = ;
-            tapping-term-ms = ;
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
             bindings = <&kp BSPC>, <&kp LC(BSPC)>;
         };
-
-        // Spezifische Home Row Mods für jede Taste
-        hm_a: homerow_mods_a {
+        
+        // Generisches Home Row Mods Behavior
+        // Wird in der Keymap mit Parametern aufgerufen, z.B. &hm LGUI A
+        hm: homerow_mods {
             compatible = "zmk,behavior-hold-tap";
-            #binding-cells = ;
-            tapping-term-ms = ;
-            quick-tap-ms = ;
-            flavor = "tap-preferred";
-            bindings = <&kp LGUI>, <&kp A>;
+            #binding-cells = <2>; // Erwartet zwei Parameter (HOLD_KEY, TAP_KEY) aus dem Keymap-Aufruf
+            tapping-term-ms = <200>; 
+            quick-tap-ms = <150>;  
+            flavor = "tap-preferred"; 
+            // KEINE 'bindings = <...>, <...>;' Zeile hier! Die Bindings kommen aus dem Aufruf.
         };
-        hm_s: homerow_mods_s {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = ;
-            tapping-term-ms = ;
-            quick-tap-ms = ;
-            flavor = "tap-preferred";
-            bindings = <&kp LALT>, <&kp S>;
-        };
-        hm_d: homerow_mods_d {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = ;
-            tapping-term-ms = ;
-            quick-tap-ms = ;
-            flavor = "tap-preferred";
-            bindings = <&kp LCTRL>, <&kp D>;
-        };
-        hm_f: homerow_mods_f {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = ;
-            tapping-term-ms = ;
-            quick-tap-ms = ;
-            flavor = "tap-preferred";
-            bindings = <&kp LSHFT>, <&kp F>;
-        };
-        hm_j: homerow_mods_j {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = ;
-            tapping-term-ms = ;
-            quick-tap-ms = ;
-            flavor = "tap-preferred";
-            bindings = <&kp RSHFT>, <&kp J>;
-        };
-        hm_k: homerow_mods_k {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = ;
-            tapping-term-ms = ;
-            quick-tap-ms = ;
-            flavor = "tap-preferred";
-            bindings = <&kp RCTRL>, <&kp K>;
-        };
-        hm_l: homerow_mods_l {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = ;
-            tapping-term-ms = ;
-            quick-tap-ms = ;
-            flavor = "tap-preferred";
-            bindings = <&kp RALT>, <&kp L>;
-        };
-        hm_o: homerow_mods_o { // Beachten Sie, dass 'O' im ursprünglichen Code als RGUI/O definiert war, was ungewöhnlich ist.
-                              // Normalerweise wäre hier eher ein anderer Buchstabe oder eine andere Funktion.
-                              // Die ursprüngliche Definition wird hier beibehalten.
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = ;
-            tapping-term-ms = ;
-            quick-tap-ms = ;
-            flavor = "tap-preferred";
-            bindings = <&kp RGUI>, <&kp O>;
-        };
-
-        // Layer-Tap Behaviors für Daumen
+        
+        // Spezifische Layer-Tap Behaviors
         lt_sym: layer_tap_symbol {
             compatible = "zmk,behavior-hold-tap";
-            #binding-cells = ;
-            tapping-term-ms = ;
-            quick-tap-ms = ;
+            #binding-cells = <0>; // Keine Parameter aus Keymap-Aufruf
+            tapping-term-ms = <200>;
+            quick-tap-ms = <150>;
             flavor = "tap-preferred";
-            bindings = <&mo SYM>, <&kp SPACE>;
+            bindings = <&mo SYM>, <&kp SPACE>; // Halten für SYM Layer, Tippen für SPACE
         };
+
         lt_nav: layer_tap_nav {
             compatible = "zmk,behavior-hold-tap";
-            #binding-cells = ;
-            tapping-term-ms = ;
-            quick-tap-ms = ;
+            #binding-cells = <0>; // Keine Parameter aus Keymap-Aufruf
+            tapping-term-ms = <200>;
+            quick-tap-ms = <150>;
             flavor = "tap-preferred";
-            bindings = <&mo NAV>, <&kp RET>;
+            bindings = <&mo NAV>, <&kp RET>;   // Halten für NAV Layer, Tippen für ENTER
         };
-    };
+    }; // Ende behaviors
 
     macros {
-        // Terminal-Makros
-        m_sudo: macro_sudo {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = ;
-            wait-ms = ;
-            tap-ms = ;
-            bindings = <&macro_tap &kp S &kp U &kp D &kp O &kp SPACE>;
-        };
-        m_cd: macro_cd {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = ;
-            wait-ms = ;
-            tap-ms = ;
-            bindings = <&macro_tap &kp C &kp D &kp SPACE>;
-        };
-        m_ls: macro_ls {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = ;
-            wait-ms = ;
-            tap-ms = ;
-            bindings = <&macro_tap &kp L &kp S &kp SPACE &kp MINUS &kp L &kp A &kp SPACE>;
-        };
-        m_git: macro_git {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = ;
-            wait-ms = ;
-            tap-ms = ;
-            bindings = <&macro_tap &kp G &kp I &kp T &kp SPACE>;
-        };
-        m_pipe: macro_pipe {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = ;
-            wait-ms = ;
-            tap-ms = ;
-            bindings = <&macro_tap &kp SPACE &kp PIPE &kp SPACE>;
-        };
-        m_and: macro_and {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = ;
-            wait-ms = ;
-            tap-ms = ;
-            bindings = <&macro_tap &kp SPACE &kp AMPS &kp AMPS &kp SPACE>;
-        };
-        m_arrow: macro_arrow {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = ;
-            wait-ms = ;
-            tap-ms = ;
-            bindings = <&macro_tap &kp MINUS &kp GT>;
-        };
-        m_dquote: macro_dquote {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = ;
-            wait-ms = ;
-            tap-ms = ;
-            bindings = <&macro_tap &kp DQT &kp DQT &kp LEFT>;
-        };
-        m_squote: macro_squote {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = ;
-            wait-ms = ;
-            tap-ms = ;
-            bindings = <&macro_tap &kp SQT &kp SQT &kp LEFT>;
-        };
-    };
+        m_sudo: macro_sudo { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp S>, <&kp U>, <&kp D>, <&kp O>, <&kp SPACE>; };
+        m_cd: macro_cd { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp C>, <&kp D>, <&kp SPACE>; };
+        m_ls: macro_ls { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp L>, <&kp S>, <&kp SPACE>, <&kp MINUS>, <&kp L>, <&kp A>, <&kp SPACE>; };
+        m_git: macro_git { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp G>, <&kp I>, <&kp T>, <&kp SPACE>; };
+        m_pipe: macro_pipe { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp SPACE>, <&kp PIPE>, <&kp SPACE>; };
+        m_and: macro_and { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp SPACE>, <&kp AMPS>, <&kp AMPS>, <&kp SPACE>; };
+        m_arrow: macro_arrow { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp MINUS>, <&kp GT>; };
+        m_dquote: macro_dquote { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp DQT>, <&kp DQT>, <&kp LEFT>; };
+        m_squote: macro_squote { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp SQT>, <&kp SQT>, <&kp LEFT>; };
+    }; // Ende macros
 
     combos {
         compatible = "zmk,combos";
         combo_sys_layer {
-            timeout-ms = ;
-            key-positions = <20 41>; // K (Index 20) + RGUI (Index 41)
+            timeout-ms = <50>;
+            // Corne Tastenbelegung (0-41):
+            // Linke Hälfte: 0-5 (obere), 6-11 (Buchstaben), 12-17 (Home Row), 18-20 (Daumen)
+            // Rechte Hälfte: 21-26 (obere), 27-32 (Buchstaben), 33-38 (Home Row), 39-41 (Daumen)
+            // Annahme: Innere Daumentasten sind 20 (links) und 41 (rechts)
+            key-positions = <20 41>; 
             bindings = <&to SYS>;
-            layers = <DEF SYM NAV>; // Aktiv auf Default, Symbol und Navigation Layer
+            layers = <DEF SYM NAV>; 
         };
-    };
+    }; // Ende combos
 
     keymap {
         compatible = "zmk,keymap";
 
-        default_layer {
-            label = "Default (DEF)"; // Hinzugefügtes Label für Klarheit
+        default_layer { // Layer 0: QWERTZ Base mit Home Row Mods
             bindings = <
-                // linke Hälfte         // rechte Hälfte
-                &kp TAB     &kp Q     &kp W     &kp E     &kp R     &kp T        &kp Y     &kp U     &kp I     &hm_o     &kp P      &td_bspc
-                &kp LCTRL   &hm_a     &hm_s     &hm_d     &hm_f     &kp G        &kp H     &hm_j     &hm_k     &hm_l     &kp SQT    &kp MINUS // Ursprünglich SQT, dann MINUS. Hier angepasst auf SQT und MINUS wie im Symbol Layer
-                &kp LSHFT   &kp Z     &kp X     &kp C     &kp V     &kp B        &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH   &kp RSHFT // Ursprünglich MINUS, dann RSHFT. Hier angepasst auf FSLH und RSHFT
-                                &kp LGUI  &lt_sym   &kp LALT                     &kp RCTRL &lt_nav   &kp RGUI
+            // Linke Hälfte                                                                // Rechte Hälfte
+            &kp TAB      &kp Q         &kp W         &kp E         &kp R         &kp T          &kp Y         &kp U         &kp I         &kp O         &kp P         &td_bspc
+            &kp LCTRL    &hm LGUI A    &hm LALT S    &hm LCTRL D   &hm LSHFT F   &kp G          &kp H         &hm RSHFT J   &hm RCTRL K   &hm RALT L    &hm RGUI O    &kp SQT
+            &kp LSHFT    &kp Z         &kp X         &kp C         &kp V         &kp B          &kp N         &kp M         &kp COMMA     &kp DOT       &kp MINUS     &kp RSHFT
+                                       &kp LGUI      &lt_sym       &kp LALT                     &kp RCTRL     &lt_nav       &kp RGUI
             >;
         };
 
-        symbol_layer {
-            label = "Symbol (SYM)";
+        symbol_layer { // Layer 1: Symbole & Zahlen
             bindings = <
-                &kp ESC     &kp N1    &kp N2    &kp N3    &kp N4    &kp N5       &kp N6    &kp N7    &kp N8    &kp N9    &kp N0     &kp PLUS
-                &trans      &kp EXCL  &kp AT    &kp HASH  &kp DLLR  &kp PRCNT    &kp CARET &kp AMPS  &kp ASTRK &kp LPAR  &kp RPAR   &kp BSLH
-                &trans      &kp TILDE &kp GRAVE &kp LC(Z) &kp LC(X) &kp LC(C)    &kp LBRC  &kp RBRC  &kp LBKT  &kp RBKT  &kp PIPE   &kp LC(V)
-                                &trans    &trans    &trans                       &trans    &trans    &trans
+            // Linke Hälfte                                                                // Rechte Hälfte
+            &kp ESC      &kp N1        &kp N2        &kp N3        &kp N4        &kp N5         &kp N6        &kp N7        &kp N8        &kp N9        &kp N0        &kp PLUS
+            &trans       &kp EXCL      &kp AT        &kp HASH      &kp DLLR      &kp PRCNT      &kp CARET     &kp AMPS      &kp ASTRK     &kp LPAR      &kp RPAR      &kp BSLH
+            &trans       &kp TILDE     &kp GRAVE     &kp LC(Z)     &kp LC(X)     &kp LC(C)      &kp LBRC      &kp RBRC      &kp LBKT      &kp RBKT      &kp PIPE      &kp LC(V)
+                                       &trans        &trans        &trans                       &trans        &trans        &trans
             >;
         };
 
-        navigation_layer {
-            label = "Navigation (NAV)";
+        navigation_layer { // Layer 2: Navigation, F-Tasten & Macros
             bindings = <
-                &kp F1      &kp F2    &kp F3    &kp F4    &kp F5    &kp F6       &kp F7    &kp F8    &kp F9    &kp F10   &kp F11    &kp F12
-                &trans      &m_sudo   &m_cd     &m_git    &m_ls     &m_pipe      &m_and    &kp LEFT  &kp DOWN  &kp UP    &kp RIGHT  &kp DEL
-                &trans      &m_squote &m_dquote &trans    &trans    &trans       &m_arrow  &kp HOME  &kp PG_DN &kp PG_UP &kp END    &trans // m_arrow war doppelt, eines entfernt
-                                &trans    &trans    &trans                       &trans    &trans    &trans
+            // Linke Hälfte                                                                // Rechte Hälfte
+            &kp F1       &kp F2        &kp F3        &kp F4        &kp F5        &kp F6         &kp F7        &kp F8        &kp F9        &kp F10       &kp F11       &kp F12
+            &trans       &m_sudo       &m_cd         &m_git        &m_ls         &m_pipe        &m_and        &kp LEFT      &kp DOWN      &kp UP        &kp RIGHT     &kp DEL
+            &trans       &m_squote     &m_dquote     &m_arrow      &trans        &trans         &m_arrow      &kp HOME      &kp PG_DN     &kp PG_UP     &kp END       &trans
+                                       &trans        &trans        &trans                       &trans        &trans        &trans
             >;
         };
 
-        system_layer {
-            label = "System (SYS)";
+        system_layer { // Layer 3: System-Funktionen (Bluetooth, Reset)
             bindings = <
-                &out OUT_USB &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4  &trans &trans &trans &trans &trans &trans
-                &trans       &trans       &trans       &trans       &trans       &trans          &trans &trans &trans &trans &trans &trans
-                &trans       &trans       &trans       &trans       &trans       &bt BT_CLR_ALL  &trans &trans &sys_reset &bootloader &trans &trans
-                                &trans       &trans       &trans                                  &trans &trans &trans
+            // Linke Hälfte                                                                // Rechte Hälfte
+            &out OUT_USB &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4   &trans        &trans        &trans        &trans        &trans        &trans
+            &trans       &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans
+            &trans       &trans        &trans        &trans        &trans        &bt BT_CLR_ALL &trans        &trans        &sys_reset    &bootloader   &trans        &trans // ACHTUNG: Reset-Tasten!
+                                       &trans        &trans        &trans                       &trans        &trans        &trans
             >;
         };
-    };
-};
+    }; // Ende keymap
+
+}; // Ende des Root-Node Overlays / { ... }
